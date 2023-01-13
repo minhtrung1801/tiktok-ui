@@ -1,15 +1,9 @@
-import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import {
-  faCircleXmark,
-  faSpinner,
-  faMagnifyingGlass,
   faEllipsisVertical,
   faEarthAsia,
   faCircleQuestion,
   faKeyboard,
-  faCloudUpload,
-  faMessage,
   faUser,
   faCoins,
   faGear,
@@ -17,16 +11,15 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import HeadlessTippy from '@tippyjs/react/headless';
 
-import { Wrapper as PopperWrapper } from '~/components/Popper';
-
-import AccountItem from '~/components/AccountItem';
 import Button from '~/components/Button';
 import styles from './Header.module.scss';
 import images from '~/assets/images';
 import Menu from '~/components/Popper/Menu';
 import 'tippy.js/dist/tippy.css';
+import { UploadIcon, InboxIcon, MessageIcon } from '~/components/Icons';
+import Image from '~/components/Image';
+import Search from '../Search';
 
 const cx = classNames.bind(styles);
 
@@ -62,14 +55,8 @@ const MENU_ITEMS = [
 ];
 
 function Header() {
-  const [searchResult, setSearchResult] = useState([]);
   const currenUser = true;
 
-  useEffect(() => {
-    setTimeout(() => {
-      setSearchResult([]);
-    }, 0);
-  }, []);
   // Handle
   const handleMenuChange = (menuItem) => {
     switch (menuItem.type) {
@@ -108,38 +95,28 @@ function Header() {
     <header className={cx('wrapper')}>
       <div className={cx('inner')}>
         <img src={images.logo} alt="TikTok" />
-        <HeadlessTippy
-          interactive
-          visible={searchResult.length > 0}
-          render={(attrs) => (
-            <div className={cx('search-result')} tabIndex="-1" {...attrs}>
-              <PopperWrapper>
-                <h4 className={cx('search-title')}>Account</h4>
-                <AccountItem />
-                <AccountItem />
-                <AccountItem />
-              </PopperWrapper>
-            </div>
-          )}
-        >
-          <div className={cx('search')}>
-            <input placeholder="Search account and videos" spellCheck={false} />
-            <button className={cx('clear')}>
-              <FontAwesomeIcon icon={faCircleXmark} />
-            </button>
-            <FontAwesomeIcon className={cx('loading')} icon={faSpinner} />
-            <button className={cx('search-btn')}>
-              <FontAwesomeIcon icon={faMagnifyingGlass} />
-            </button>
-          </div>
-        </HeadlessTippy>
+
+        <Search />
 
         <div className={cx('actions')}>
           {currenUser ? (
             <>
               <Tippy delay={[0, 200]} content="Upload video" placement="bottom">
-                <button className={cx('actions-btn')}>
-                  <FontAwesomeIcon icon={faCloudUpload} />
+                <button className={cx('action-btn')}>
+                  <UploadIcon />
+                </button>
+              </Tippy>
+
+              <Tippy delay={[0, 50]} content="Message" placement="bottom">
+                <button className={cx('action-btn')}>
+                  <MessageIcon />
+                </button>
+              </Tippy>
+
+              <Tippy delay={[0, 50]} content="Inbox" placement="bottom">
+                <button className={cx('action-btn')}>
+                  <InboxIcon />
+                  <span className={cx('badge')}>12</span>
                 </button>
               </Tippy>
             </>
@@ -151,7 +128,7 @@ function Header() {
           )}
           <Menu items={currenUser ? userMenu : MENU_ITEMS} onChange={handleMenuChange}>
             {currenUser ? (
-              <img
+              <Image
                 src="https://p9-sign-sg.tiktokcdn.com/aweme/100x100/tos-alisg-avt-0068/f48f887c5c0a3786c012c580bb098fbc.jpeg?x-expires=1673424000&x-signature=ZRo82fT11AZGx1qx8hWPlmK0K9g%3D"
                 className={cx('user-avatar')}
                 alt="Nguyen Van A"
